@@ -153,5 +153,6 @@ def about():
 
 # Deployment Handling (Render.com)
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Use dynamic port assignment for Render.com
+    port = int(os.environ.get("PORT", 5000))
     app.run(debug=False, host='0.0.0.0', port=port)
+ 

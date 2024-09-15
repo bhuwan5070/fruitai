@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ Section</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <section class="faq-section">
+        <div class="container">
+            <h1>FAQ Section</h1>
+
+            <!-- Form to add new FAQ -->
+            <form action="{{ url_for('add_faq') }}" method="POST">
+                <h2>Add New FAQ</h2>
+                <input type="text" name="question" placeholder="Enter your question" required>
+                <textarea name="answer" placeholder="Enter your answer" required></textarea>
+                <button type="submit">Add FAQ</button>
+            </form>
+
+            <!-- FAQ Cards -->
+            {% for faq in faqs %}
+                <div class="faq-card">
+                    <h2>{{ faq['question'] }}</h2>
+                    <p>{{ faq['answer'] }}</p>
+                    <button onclick="editFAQ({{ loop.index0 }})">Edit</button>
+                    <button onclick="deleteFAQ({{ loop.index0 }})">Delete</button>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <script>
+        function editFAQ(index) {
+            const newQuestion = prompt("Enter the new question:");
+            const newAnswer = prompt("Enter the new answer:");
+            if (newQuestion && newAnswer) {
+                fetch(`/edit_faq/${index}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        'question': newQuestion,
+                        'answer': newAnswer
+                    })
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();  // Reload the page to reflect changes
+                    } else {
+                        alert('Failed to edit FAQ');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to edit FAQ');
+                });
+            }
+        }
+
+        function deleteFAQ(index) {
+            if (confirm("Are you sure you want to delete this FAQ?")) {
+                fetch(`/delete_faq/${index}`, {
+                    method: 'GET'
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload();  // Reload the page to reflect changes
+                    } else {
+                        alert('Failed to delete FAQ');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to delete FAQ');
+                });
+            }
+        }
+    </script>
+    <style>
+        <style>
+    /* General Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    /* Body Styles */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        padding: 20px;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+        max-width: 800px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    h1 {
+        margin-bottom: 20px;
+        font-size: 2em;
+        color: #333;
+    }
+
+    /* Form Styles */
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1em;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* FAQ Cards */
+    .faq-card {
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-card h2 {
+        margin-bottom: 10px;
+        font-size: 1.25em;
+        color: #333;
+    }
+
+    .faq-card p {
+        margin-bottom: 15px;
+        font-size: 1em;
+        color: #666;
+    }
+
+    .faq-card button {
+        background-color: #28a745;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease;
+        margin-right: 5px;
+    }
+
+    .faq-card button:hover {
+        background-color: #218838;
+    }
+
+    .faq-card button.delete-btn {
+        background-color: #dc3545;
+    }
+
+    .faq-card button.delete-btn:hover {
+        background-color: #c82333;
+    }
+</style>
+
+    </style>
+</body>
+</html>

@@ -49,12 +49,4 @@ To log in, use the following dummy credentials:
 
 Username: bhuwan1@gmail.com
 Password: 123456789
-Properties
-Translate: The app includes translation features to support multiple languages.
-FAQ: A Frequently Asked Questions section is available to assist users with common inquiries.
-Usage
-Open the application in your web browser.
-Log in using the provided dummy credentials.
-Use the app to upload images of fruits and get predictions.
-Contributing
-Feel free to contribute to the project by creating issues or submitting pull requests.
+

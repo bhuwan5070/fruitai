@@ -24,3 +24,53 @@ The Fruit AI App is a web application that uses machine learning to identify and
 
    ```bash
    git clone <repository-url>
+
+   Navigate to the project directory:
+
+bash
+Copy code
+cd fruit-ai-app
+Set up a virtual environment:
+
+bash
+Copy code
+python -m venv venv
+Activate the virtual environment:
+
+On Windows:
+
+bash
+Copy code
+venv\Scripts\activate
+On macOS/Linux:
+
+bash
+Copy code
+source venv/bin/activate
+Install the required dependencies:
+
+bash
+Copy code
+pip install -r requirements.txt
+Run the Flask application:
+
+bash
+Copy code
+python app.py
+Dummy Credentials
+To log in, use the following dummy credentials:
+
+Username: bhuwan1@gmail.com
+Password: 123456789
+Properties
+Translate: The app includes translation features to support multiple languages.
+FAQ: A Frequently Asked Questions section is available to assist users with common inquiries.
+Usage
+Open the application in your web browser.
+Log in using the provided dummy credentials.
+Use the app to upload images of fruits and get predictions.
+Contributing
+Feel free to contribute to the project by creating issues or submitting pull requests.
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.

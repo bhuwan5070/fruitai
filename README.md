@@ -36,18 +36,6 @@ Copy code
 python -m venv venv
 Activate the virtual environment:
 
-On Windows:
-
-bash
-Copy code
-venv\Scripts\activate
-On macOS/Linux:
-
-bash
-Copy code
-source venv/bin/activate
-Install the required dependencies:
-
 bash
 Copy code
 pip install -r requirements.txt

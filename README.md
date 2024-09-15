@@ -24,8 +24,7 @@ The Fruit AI App is a web application that uses machine learning to identify and
 
    ```bash
    git clone <repository-url>
-
-   Navigate to the project directory:
+Navigate to the project directory:
 
 bash
 Copy code
@@ -71,6 +70,3 @@ Log in using the provided dummy credentials.
 Use the app to upload images of fruits and get predictions.
 Contributing
 Feel free to contribute to the project by creating issues or submitting pull requests.
-
-License
-This project is licensed under the MIT License - see the LICENSE file for details.

@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for,jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from googletrans import Translator
-
 import bcrypt
+import os
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -38,19 +38,42 @@ with app.app_context():
         new_user = User(email='bhuwan1@gmail.com', password='123456789', name='Test User')
         db.session.add(new_user)
         db.session.commit()
+
+# FAQ Data (in-memory for simplicity)
 faq_data = []
+
+# Chatbot Responses
 def get_bot_response(user_input):
     responses = {
-        "Banana": "Bananas are a natural source of energy and contain high levels of potassium, which helps maintain heart health.",
-        "Mango": "Mangoes are known as the king of fruits and are rich in vitamins A and C.",
-        "Apple": "Apples come in over 7,500 varieties and are a great source of fiber and antioxidants",
+        "banana": "Bananas are a natural source of energy and contain high levels of potassium, which helps maintain heart health.",
+        "mango": "Mangoes are known as the king of fruits and are rich in vitamins A and C.",
+        "apple": "Apples come in over 7,500 varieties and are a great source of fiber and antioxidants",
         "default": "I'm not sure how to respond to that."
     }
     return responses.get(user_input.lower(), responses["default"])
+
+# Routes
+
+# Chat Route
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_input = request.json.get('message')
+    
+    if not user_input:
+        return jsonify({'response': "I didn't receive a message!"})
+    
+    print(f"User input: {user_input}")  # Debugging: Ensure input is received
+    bot_response = get_bot_response(user_input)
+    print(f"Bot response: {bot_response}")  # Debugging: Ensure response is generated
+
+    return jsonify({'response': bot_response})
+
+# Render Chat Page
 @app.route('/chat')
 def chat_page():
-    return render_template('chat.html')  # Serve the chat.html template
+    return render_template('chat.html')
 
+# FAQ Routes
 @app.route('/faq')
 def faq_page():
     return render_template('faq.html', faqs=faq_data)
@@ -80,38 +103,31 @@ def delete_faq(index):
         return jsonify({'status': 'success'})
     return jsonify({'status': 'error'}), 400
 
-
-@app.route('/chat', methods=['POST'])
-def chat():
-    user_input = request.json.get('message')
-    print(f"User input: {user_input}")  # Print user input
-    bot_response = get_bot_response(user_input)
-    print(f"Bot response: {bot_response}")  # Print bot response
-    return jsonify({'response': bot_response})
-
+# Home Route
 @app.route('/')
 def index():
-    return redirect(url_for('home'))  # Redirect to the /home route
+    return redirect(url_for('login'))
 
 @app.route('/home')
 def home():
-    return render_template('home.html')  # Render the home.html template
+    return render_template('home.html')
 
+# Login Route
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         email = request.form.get('email')
         password = request.form.get('password')
-        # print(email)
-        print(password)
+        
         user = User.query.filter_by(email=email).first()
-        print(user)
         if user and user.check_password(password):
-            return redirect(url_for('home'))  # Redirect to the /home route upon successful login
+            return redirect(url_for('home'))  # Redirect to /home after login
         else:
-            return "Invalid credentials"  # Display an error message
+            return render_template('login.html', error="Invalid credentials")  # Return error message
 
     return render_template('login.html')
+
+# Translation Route
 @app.route('/translate', methods=['GET', 'POST'])
 def translate_page():
     translated_text = None
@@ -121,9 +137,6 @@ def translate_page():
 
         if text_to_translate and target_language:
             try:
-                # Initialize googletrans translator
-                translator = Translator()
-                # Translate the text
                 translation = translator.translate(text_to_translate, dest=target_language)
                 translated_text = translation.text
             except Exception as e:
@@ -133,10 +146,12 @@ def translate_page():
     
     return render_template('translate.html')
 
+# About Route
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-
+# Deployment Handling (Render.com)
 if __name__ == "__main__":
-    app.run(port=4000, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Use dynamic port assignment for Render.com
+    app.run(debug=False, host='0.0.0.0', port=port)
